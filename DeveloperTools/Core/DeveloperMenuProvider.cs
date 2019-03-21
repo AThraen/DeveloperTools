@@ -13,6 +13,9 @@ namespace DeveloperTools.Core
         const string GlobalMenuTitle = "Developer";
         const string GlobalMenuLogicalPath = "/global/DeveloperTools";
 
+        const string ConsoleTitle = "Console";
+        const string ConsolePath = "global/DeveloperTools/Console";
+
         const string TimeMetersTitle = "Startup Perf";
         const string TimeMetersPath = "global/DeveloperTools/StartupPerf";
 
@@ -60,6 +63,7 @@ namespace DeveloperTools.Core
                 IsAvailable = request => PrincipalInfo.HasAdminAccess
             };
 
+            var console = CreateUrlMenuItem(ConsoleTitle, ConsolePath, Paths.ToResource(ModuleName, "Console"));
             var timeMeters = CreateUrlMenuItem(TimeMetersTitle, TimeMetersPath, Paths.ToResource(ModuleName, "TimeMeters"));
             var templates = CreateUrlMenuItem(TemplatesTitle, TemplatesPath, Paths.ToResource(ModuleName, "Templates"));
             var ioc = CreateUrlMenuItem(IocTitle, IocPath, Paths.ToResource(ModuleName, "IOC"));
@@ -76,6 +80,7 @@ namespace DeveloperTools.Core
 
             return new MenuItem[]
             {
+                console,
                 developerSection,
                 timeMeters,
                 ioc,

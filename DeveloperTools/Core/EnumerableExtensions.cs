@@ -11,6 +11,7 @@ namespace DeveloperTools.Core
             foreach (var element in source)
                 if(knownKeys.Add(keySelector(element)))
                     yield return element;
+
         }
     }
 }
