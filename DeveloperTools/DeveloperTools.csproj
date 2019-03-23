@@ -200,22 +200,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console\Attributes\CommandAttribute.cs" />
-    <Compile Include="Console\CommandBase.cs" />
+    <Compile Include="Console\Attributes\CommandParameterAttribute.cs" />
     <Compile Include="Console\CommandJob.cs" />
     <Compile Include="Console\CommandManager.cs" />
-    <Compile Include="Console\Commands\Abort.cs" />
-    <Compile Include="Console\Commands\ActiveJobs.cs" />
-    <Compile Include="Console\Commands\Echo.cs" />
-    <Compile Include="Console\Commands\List.cs" />
-    <Compile Include="Console\Commands\MemoryStats.cs" />
-    <Compile Include="Console\Commands\Notify.cs" />
-    <Compile Include="Console\Commands\Wait.cs" />
-    <Compile Include="Console\ICommand.cs" />
+    <None Include="Console\Commands\Abort.cs" />
+    <None Include="Console\Commands\ActiveJobs.cs" />
+    <None Include="Console\Commands\Echo.cs" />
+    <None Include="Console\Commands\List.cs" />
+    <None Include="Console\Commands\MemoryStats.cs" />
+    <None Include="Console\Commands\Notify.cs" />
+    <None Include="Console\Commands\Wait.cs" />
+    <Compile Include="Console\ConsoleInit.cs" />
+    <Compile Include="Console\Interfaces\IInputCommand.cs" />
+    <Compile Include="Console\Interfaces\IOutputCommand.cs" />
+    <Compile Include="Console\Interfaces\IThreadedCommand.cs" />
     <Compile Include="Console\Models\CommandLog.cs" />
+    <Compile Include="Console\Models\ConsoleCommandDescriptor.cs" />
     <Compile Include="Console\NewCommands\HelloWorldCommand.cs" />
-    <Compile Include="Console\NewCommands\MemoryCommand.cs" />
+    <Compile Include="Console\Interfaces\IConsoleCommand.cs" />
+    <Compile Include="Console\NewCommands\Memory.cs" />
     <Compile Include="Console\NewCommands\StartCommand.cs" />
-    <Compile Include="Console\TypedCommand.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
     <Compile Include="Controllers\ContentTypeAnalyzerController.cs" />
     <Compile Include="Controllers\LocalObjectCacheController.cs" />
@@ -256,22 +260,15 @@
     <Compile Include="Controllers\ModuleDependenciesController.cs" />
     <None Include="EPiServer.DeveloperTools.zip" />
     <None Include="modules\_protected\CMS\CMS.zip" />
-    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\Console\Index.cshtml" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\ContentTypeAnalyzer\Index.aspx" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\LocalObjectCache\Index.aspx" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\Routes\Index.aspx" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\RemoteEvent\Index.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\IOC\Index.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </None>
-    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\LoadedAssemblies\Index.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </None>
-    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\LogViewer\Show.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </None>
+    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\IOC\Index.aspx" />
+    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\LoadedAssemblies\Index.aspx" />
+    <None Include="modules\_protected\EPiServer.DeveloperTools\Views\LogViewer\Show.aspx" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\MemoryDump\Index.aspx" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\RevertToDefault\Index.aspx" />
     <None Include="modules\_protected\EPiServer.DeveloperTools\Views\Templates\Index.aspx">

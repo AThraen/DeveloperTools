@@ -87,10 +87,10 @@ input:focus, textarea {
            $.getJSON('<%=EPiServer.Shell.Paths.ToResource("EPiServer.DeveloperTools","Console/FetchLog/") %>', { LastLogNo: last }, function (data) {
                last = data.LastNo;
                $.each(data.LogItems, function (idx, val) {
-                   $('#log').append(val.TimeString+' '+val.Sender+': '+val.Text + '<br/>');
+                   $('#log').append(val+'<br/>');
                })
                //LogItems[Time,Sender,Text]
-               $('#log').scrollTo('#command');
+               //$('#log').scrollTo('#command');
                window.setTimeout(RefreshLog, 1000);
            });
        }

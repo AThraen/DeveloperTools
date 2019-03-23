@@ -8,20 +8,23 @@ using EPiServer.Framework.Initialization;
 using CodeArtCommandsExperiment.CodeArtCommand.Models;
 using EPiServer.Personalization;
 using System.Threading;
+using DeveloperTools.Console.Models;
+using DeveloperTools.Console.Interfaces;
 
 namespace CodeArtCommandsExperiment.CodeArtCommand
 {
     [ServiceConfiguration(Lifecycle = ServiceInstanceScope.Singleton, ServiceType = typeof(CommandManager))]
     public class CommandManager 
     {
-        public List<CommandLog> Log { get; set; }
-        public List<ICommand> AllCommands { get; set; }
+
+        //New stuff
+        public Dictionary<string,ConsoleCommandDescriptor> Commands { get; set; }
+
+
+        public List<string> Log { get; set; }
         public List<CommandJob> ActiveJobs { get; set; }
         private Random _rand = new Random();
-
-        private  string[] _threadNames = new string[] {
-            "Alice","Alex","Max","Oliver","Olga","George","John","Paul","Ringo","Ada","Charlie","Mikael","Jonas","Magnus","Anna"
-        };
+        
 
         public void UpdateJobs()
         {
@@ -31,47 +34,57 @@ namespace CodeArtCommandsExperiment.CodeArtCommand
                 CommandLog cl = null;
                 while(j.LogQueue.TryDequeue(out cl))
                 {
-                    Log.Add(cl);
+                    //Log.Add(cl);
                 }
             }
-            //TODO: Incoming and Outgoing and piping
             //Clean up
             ActiveJobs.RemoveAll(cj => cj.Thread.ThreadState == ThreadState.Stopped);
         }
 
         public CommandManager()
         {
+            Commands = new Dictionary<string, ConsoleCommandDescriptor>();
             ActiveJobs = new List<CommandJob>();
-            Log = new List<CommandLog>();
-            Log.Add(new CommandLog("Episerver", $"Episerver {typeof(EPiServer.Core.ContentReference).Assembly.GetName().Version.ToString()} loaded and ready."));
+            Log = new List<string>();
+            Log.Add($"Episerver {typeof(EPiServer.Core.ContentReference).Assembly.GetName().Version.ToString()} loaded and ready.");
         }
-
-
-
 
 
         public void ExecuteCommand(string command)
         {
-            if(AllCommands==null) AllCommands = ServiceLocator.Current.GetAllInstances<ICommand>().ToList();
-            //TODO handle pipes
-            //TODO handle input to specific threads
-            string kw = command.Split(' ').First();
-            var cmd=AllCommands.Where(cb => cb.Keyword.ToLower() == kw.ToLower()).FirstOrDefault();
-            if (cmd == null) return;
-            var job=cmd.CreateJob();
-            //Assign parameters
-            job.OriginalCommand = command.Substring(kw.Length).Trim();
-            job.Owner = EPiServerProfile.Current.DisplayName;
-            var possnames=_threadNames.Except(ActiveJobs.Select(cj => cj.Name)).ToArray();
-            if(possnames.Length==0)
+            var parts = command.Split(' ').Where(p => p!="").ToArray(); //TODO: Better arguments handling (support quotes)
+            if (Commands.ContainsKey(parts.First().ToLower()))
             {
-                Log.Add(new CommandLog("System", $"Unable to start job, no workers available"));
+                var cmdd = Commands[parts.First().ToLower()];
+
+                //Create command object
+                var cmd = cmdd.CreateNew<IConsoleCommand>();
+
+
+                //Map parameters
+                for (int i = 1; i < parts.Length; i+=2)
+                {
+                    if (parts[i].StartsWith("-"))
+                    {
+                        //Parameter
+                        if (cmdd.Parameters.ContainsKey(parts[i].ToLower().TrimStart('-')))
+                        {
+                            var pi=cmdd.Parameters[parts[i].ToLower().TrimStart('-')];
+                            pi.SetValue(cmd, parts[i + 1]); //TODO: Support other types than string
+                        }
+                        {
+                           // Log.Add("Unrecognized parameter: " + parts[i]);
+                        }
+                    } else
+                    {
+                        Log.Add("Unknown parameter: " + parts[i]);
+                    }
+                }
+
+                //Execute command
+                Log.Add(cmd.Execute(parts.Skip(1).ToArray()));
             }
-            job.Name = possnames[_rand.Next(possnames.Length)];
-            job.Thread = new Thread(new ThreadStart(job.Execute));
-            job.Thread.Start();
-            ActiveJobs.Add(job);
-            Log.Add(new CommandLog("System", $"{kw} job assigned to {job.Name}"));
+            else Log.Add("Unknown Command");
 
         }
 
