@@ -61,6 +61,9 @@
     <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="CommandLine, Version=2.4.3.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.4.3\lib\netstandard2.0\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="EPiServer, Version=11.11.0.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <HintPath>..\packages\EPiServer.CMS.Core.11.11.0\lib\net461\EPiServer.dll</HintPath>
     </Reference>
@@ -218,6 +221,7 @@
     <Compile Include="Console\Models\ConsoleCommandDescriptor.cs" />
     <Compile Include="Console\NewCommands\HelloWorldCommand.cs" />
     <Compile Include="Console\Interfaces\IConsoleCommand.cs" />
+    <Compile Include="Console\NewCommands\ListCommand.cs" />
     <Compile Include="Console\NewCommands\Memory.cs" />
     <Compile Include="Console\NewCommands\StartCommand.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />

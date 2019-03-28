@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace DeveloperTools.Console.Interfaces
 {
-    interface IOutputCommand : IConsoleCommand
+    public delegate void CommandOutput(IOutputCommand sender, object output);
+
+    public interface IOutputCommand : IConsoleCommand
     {
-        
+        event CommandOutput OnCommandOutput;
     }
 }
