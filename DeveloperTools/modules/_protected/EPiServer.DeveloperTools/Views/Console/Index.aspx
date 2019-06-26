@@ -57,7 +57,7 @@ input:focus, textarea {
     <p>Admin</p>
   </header>
   <div class="consolebody">
-    <p>type list-commands to see a list of commands</p>
+    <p>type 'help' to see a list of commands</p>
     <p id="log"></p>
     <p>><input type="text" id="command" /></p>
   </div>
@@ -76,7 +76,12 @@ input:focus, textarea {
                $.post('<%=EPiServer.Shell.Paths.ToResource("EPiServer.DeveloperTools","Console/RunCommand/") %>', { command: cmd });
            } else if (e.keyCode == 38) {
                //Arrow up - if val is empty fill in last typed command. Otherwise it may be navigating in autocomplete?
-               $('#command').val(cmdhistory[cmdhistory.length]);
+               $('#command').val(cmdhistory[cmdhistory.length - 1]);
+               e.stopPropagation();
+               e.preventDefault();  
+               e.returnValue = false;
+               e.cancelBubble = true;
+               return false;
            }
        });
        $(function () {

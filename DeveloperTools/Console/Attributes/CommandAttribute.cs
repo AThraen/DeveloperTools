@@ -11,5 +11,7 @@ namespace DeveloperTools.Console.Attributes
 
         public string Syntax { get; set; }
 
+        public string Description { get; set; }
+
     }
 }

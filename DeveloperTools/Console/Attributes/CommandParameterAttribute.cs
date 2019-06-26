@@ -10,6 +10,8 @@ namespace DeveloperTools.Console.Attributes
     {
         public string DefaultValue { get; set; }
 
+        public string Description { get; set; }
+
         public int Order { get; set; }
 
         public string Name { get; set; }

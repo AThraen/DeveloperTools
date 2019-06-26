@@ -15,7 +15,7 @@ namespace DeveloperTools.Console.Models
 
         public Dictionary<string,PropertyInfo> Parameters { get; set; }
 
-        
+        public CommandAttribute Info { get; set; }
 
         public void LoadParameters()
         {
@@ -24,19 +24,29 @@ namespace DeveloperTools.Console.Models
             foreach(var p in CommandType.GetProperties())
             {
                 var pa = p.GetCustomAttribute<CommandParameterAttribute>();
-                if (pa != null && !string.IsNullOrEmpty(pa.Name)) Parameters.Add(pa.Name.ToLower(), p);
-                else Parameters.Add(p.Name.ToLower(), p);
+                if (pa != null) {
+                    if (!string.IsNullOrEmpty(pa.Name)) Parameters.Add(pa.Name.ToLower(), p);
+                    else Parameters.Add(p.Name.ToLower(), p);
+                }
             }
         }
 
-        public string Keyword {
-            get
+        public ConsoleCommandDescriptor(Type t)
+        {
+            this.CommandType = t;
+            var ca = CommandType.GetCustomAttributes(typeof(CommandAttribute), true).FirstOrDefault() as CommandAttribute;
+            if (ca == null)
             {
-                var ca=CommandType.GetCustomAttributes(typeof(CommandAttribute), true).FirstOrDefault() as CommandAttribute;
-                if (ca == null) return CommandType.Name;
-                return ca.Keyword;
+                Info = new CommandAttribute() { Keyword = CommandType.Name };
+            } else
+            {
+                Info = ca;
             }
+
+            this.LoadParameters();
         }
+
+        public string Keyword { get { return Info.Keyword; } }
 
         public T CreateNew<T>() where T:IConsoleCommand
         {

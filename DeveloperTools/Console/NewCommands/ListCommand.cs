@@ -1,4 +1,5 @@
-﻿using DeveloperTools.Console.Interfaces;
+﻿using DeveloperTools.Console.Attributes;
+using DeveloperTools.Console.Interfaces;
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.ServiceLocation;
@@ -10,20 +11,32 @@ using System.Threading.Tasks;
 
 namespace DeveloperTools.Console.NewCommands
 {
+    [Command(Keyword = "list", Description ="Lists all descendants below the node")]
     public class ListCommand : IOutputCommand
     {
         public event CommandOutput OnCommandOutput;
 
+        [CommandParameter]
+        public string Parent { get; set; }
+
         public string Execute(params string[] parameters)
         {
             var repo = ServiceLocator.Current.GetInstance<IContentRepository>();
-
-            foreach(var r in repo.GetDescendents(ContentReference.StartPage))
+            int cnt = 0;
+            ContentReference start = ContentReference.StartPage;
+            if (!string.IsNullOrEmpty(Parent))
             {
-                OnCommandOutput?.Invoke(this, repo.Get<IContent>(r));
+                if (Parent.ToLower() == "root") start = ContentReference.RootPage;
+                start = ContentReference.Parse(Parent);
             }
 
-            return "Done";
+            foreach(var r in repo.GetDescendents(start))
+            {
+                OnCommandOutput?.Invoke(this, repo.Get<IContent>(r));
+                cnt++;
+            }
+
+            return $"Done, listing {cnt} content items";
         }
     }
 }

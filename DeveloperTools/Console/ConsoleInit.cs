@@ -25,12 +25,12 @@ namespace DeveloperTools.Console
             var type = typeof(IConsoleCommand);
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p));
+                .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
 
             foreach(var t in types)
             {
-                var ccd = new ConsoleCommandDescriptor() { CommandType = t };
-                ccd.LoadParameters();
+                var ccd = new ConsoleCommandDescriptor(t);
+
                 cmdMgr.Commands.Add(ccd.Keyword.ToLower(), ccd);
             }
         }
